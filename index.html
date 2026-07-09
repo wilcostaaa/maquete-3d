@@ -8,14 +8,14 @@
     <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
   </head>
   <body style="margin: 0px; overflow: hidden;">
-    <a-scene embedded arjs="sourceType: webcam; debugUIEnabled: false;">
+    <a-scene embedded arjs="sourceType: webcam; debugUIEnabled: false; detectionMode: mono_and_matrix; matrixCodeType: 3x3;">
       <a-assets>
         <a-asset-item id="terrain-obj" src="terreno.obj"></a-asset-item>
         <a-asset-item id="terrain-mtl" src="terreno.mtl"></a-asset-item>
       </a-assets>
 
-      <!-- Marcador Físico Padrão Hiro -->
-      <a-marker preset="hiro">
+      <!-- Marcador de Código de Barras de ID 5 -->
+      <a-marker type="barcode" value="5">
         <!-- Rotacionamos o modelo para deitar sobre o papel e escalamos -->
         <a-entity 
           obj-model="obj: #terrain-obj; mtl: #terrain-mtl" 
