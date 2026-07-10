@@ -276,22 +276,22 @@
                             const trunkMat = new THREE.MeshLambertMaterial({ color: 0x6e4b30, map: woodMap });
                             const trunkMesh = new THREE.InstancedMesh(trunkGeo, trunkMat, treeCount);
                             
-                            // Tipo 1: Árvore Caótica (Tetraedro - muito irregular)
-                            const type1Geo = new THREE.TetrahedronGeometry(0.005, 0);
+                            // Tipo 1: Copa densa e arredondada
+                            const type1Geo = new THREE.DodecahedronGeometry(0.005, 1);
                             const type1Mat = new THREE.MeshLambertMaterial({ color: 0x4CAF50, map: leafMap });
                             const type1Mesh = new THREE.InstancedMesh(type1Geo, type1Mat, treeCount);
 
-                            // Tipo 2: Árvore Pontiaguda (Octaedro)
-                            const type2Geo = new THREE.OctahedronGeometry(0.005, 0);
+                            // Tipo 2: Copa cheia e suave
+                            const type2Geo = new THREE.IcosahedronGeometry(0.005, 1);
                             const type2Mat = new THREE.MeshLambertMaterial({ color: 0x556B2F, map: leafMap });
                             const type2Mesh = new THREE.InstancedMesh(type2Geo, type2Mat, treeCount);
 
-                            // Tipo 3: Árvore Savana irregular (Dodecaedro achatado)
+                            // Tipo 3: Copa tipo Savana/Ipê (achatada e larga)
                             const type3Geo = new THREE.DodecahedronGeometry(0.005, 0);
                             const type3Mat = new THREE.MeshLambertMaterial({ color: 0x6B8E23, map: leafMap });
                             const type3Mesh = new THREE.InstancedMesh(type3Geo, type3Mat, treeCount);
 
-                            // Tipo 4: Arbusto Denso irregular (Icosaedro com detalhe 0)
+                            // Tipo 4: Copa irregular/arbustiva
                             const type4Geo = new THREE.IcosahedronGeometry(0.005, 0);
                             const type4Mat = new THREE.MeshLambertMaterial({ color: 0x8FBC8F, map: leafMap });
                             const type4Mesh = new THREE.InstancedMesh(type4Geo, type4Mat, treeCount);
@@ -320,10 +320,10 @@
                                     
                                     const scale = 0.6 + Math.random() * 0.9;
                                     
-                                    // Distorção caótica para que cada copa seja única (quebra a redondeza)
-                                    const scaleX = scale * (0.7 + Math.random() * 0.6);
-                                    const scaleY = scale * (0.6 + Math.random() * 0.6);
-                                    const scaleZ = scale * (0.7 + Math.random() * 0.6);
+                                    // Distorção suave para manter formato de árvore, mas quebrar a simetria
+                                    const scaleX = scale * (0.85 + Math.random() * 0.3);
+                                    const scaleY = scale * (0.75 + Math.random() * 0.4); // Levemente achatada
+                                    const scaleZ = scale * (0.85 + Math.random() * 0.3);
                                     
                                     // Rotação completamente caótica para a copa (tira a previsibilidade)
                                     const rotX = Math.random() * Math.PI; 
@@ -382,13 +382,19 @@
                             scene.add(type2Mesh);
                             scene.add(type3Mesh);
                             scene.add(type4Mesh);
+                            
+                            // Sumir com tela de carregamento somente após TUDO estar pronto
+                            const loader = document.getElementById('loader');
+                            loader.style.opacity = '0';
+                            setTimeout(() => { loader.style.display = 'none'; }, 500);
                         })
-                        .catch(err => console.log('Aviso: arquivo arvores.json não encontrado.'));
-                    
-                    // Sumir com tela de carregamento de forma suave
-                    const loader = document.getElementById('loader');
-                    loader.style.opacity = '0';
-                    setTimeout(() => { loader.style.display = 'none'; }, 500);
+                        .catch(err => {
+                            console.log('Aviso: arquivo arvores.json não encontrado.');
+                            const loader = document.getElementById('loader');
+                            loader.style.opacity = '0';
+                            setTimeout(() => { loader.style.display = 'none'; }, 500);
+                        });
+
                 }, 
                 function(xhr) {
                     if (xhr.lengthComputable) {
