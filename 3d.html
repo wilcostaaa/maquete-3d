@@ -238,15 +238,22 @@
                             const trunkMat = new THREE.MeshLambertMaterial({ color: 0x8B5A2B });
                             const trunkMesh = new THREE.InstancedMesh(trunkGeo, trunkMat, treeCount);
                             
-                            const leavesGeo = new THREE.ConeGeometry(0.005, 0.02, 5);
-                            const leavesMat = new THREE.MeshLambertMaterial({ color: 0x228B22 });
-                            const leavesMesh = new THREE.InstancedMesh(leavesGeo, leavesMat, treeCount);
+                            const pineGeo = new THREE.ConeGeometry(0.004, 0.015, 5);
+                            const pineMat = new THREE.MeshLambertMaterial({ color: 0x1E5925 }); // Verde escuro pinheiro
+                            const pineMesh = new THREE.InstancedMesh(pineGeo, pineMat, treeCount);
+
+                            const roundGeo = new THREE.DodecahedronGeometry(0.005, 0); // Copas redondas
+                            const roundMat = new THREE.MeshLambertMaterial({ color: 0x3A8E3A }); // Verde claro
+                            const roundMesh = new THREE.InstancedMesh(roundGeo, roundMat, treeCount);
                             
                             const dummy = new THREE.Object3D();
                             const raycaster = new THREE.Raycaster();
                             const downVector = new THREE.Vector3(0, -1, 0);
                             
-                            let added = 0;
+                            let addedTrunk = 0;
+                            let addedPine = 0;
+                            let addedRound = 0;
+                            
                             for(let i = 0; i < treeCount; i++) {
                                 const u = trees[i][0];
                                 const v = trees[i][1];
@@ -261,27 +268,42 @@
                                 
                                 if(intersects.length > 0) {
                                     const ty = intersects[0].point.y;
-                                    const scale = 0.5 + Math.random() * 0.5; // Escala entre 0.5x e 1.0x
-                                    const rotY = Math.random() * Math.PI * 2;
                                     
-                                    dummy.position.set(tx, ty + (0.005 * scale), tz); // metade da altura do tronco
-                                    dummy.rotation.set(0, rotY, 0);
+                                    // Variação orgânica e controlada de tamanho
+                                    const scale = 0.6 + Math.random() * 0.9; // 0.6x a 1.5x
+                                    const rotY = Math.random() * Math.PI * 2;
+                                    const rotX = (Math.random() - 0.5) * 0.2; // Leve inclinação
+                                    const rotZ = (Math.random() - 0.5) * 0.2;
+                                    
+                                    dummy.position.set(tx, ty + (0.005 * scale), tz); // Centro do tronco
+                                    dummy.rotation.set(rotX, rotY, rotZ);
                                     dummy.scale.set(scale, scale, scale);
                                     dummy.updateMatrix();
-                                    trunkMesh.setMatrixAt(added, dummy.matrix);
+                                    trunkMesh.setMatrixAt(addedTrunk, dummy.matrix);
+                                    addedTrunk++;
                                     
-                                    dummy.position.set(tx, ty + (0.02 * scale), tz); // encosta no topo do tronco
-                                    dummy.updateMatrix();
-                                    leavesMesh.setMatrixAt(added, dummy.matrix);
-                                    added++;
+                                    // 50% de chance para cada tipo de árvore
+                                    if(Math.random() > 0.5) {
+                                        dummy.position.set(tx, ty + (0.0175 * scale), tz);
+                                        dummy.updateMatrix();
+                                        pineMesh.setMatrixAt(addedPine, dummy.matrix);
+                                        addedPine++;
+                                    } else {
+                                        dummy.position.set(tx, ty + (0.014 * scale), tz);
+                                        dummy.updateMatrix();
+                                        roundMesh.setMatrixAt(addedRound, dummy.matrix);
+                                        addedRound++;
+                                    }
                                 }
                             }
                             
-                            console.log('Árvores adicionadas:', added);
-                            trunkMesh.count = added;
-                            leavesMesh.count = added;
+                            trunkMesh.count = addedTrunk;
+                            pineMesh.count = addedPine;
+                            roundMesh.count = addedRound;
+                            
                             scene.add(trunkMesh);
-                            scene.add(leavesMesh);
+                            scene.add(pineMesh);
+                            scene.add(roundMesh);
                         })
                         .catch(err => console.log('Aviso: arquivo arvores.json não encontrado.'));
                     
