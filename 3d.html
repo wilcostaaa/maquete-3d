@@ -118,8 +118,8 @@
     </div>
     
     <div class="instruction-badge">
-        <div class="instruction-item">👆 1 Dedo: Deslocar (Mover)</div>
-        <div class="instruction-item">✌️ 2 Dedos: Zoom e Rotacionar (Girar)</div>
+        <div class="instruction-item">👆 1 Dedo: Girar (Rotacionar)</div>
+        <div class="instruction-item">✌️ 2 Dedos: Zoom / Mover (Pan)</div>
     </div>
 
     <div class="ui-panel">
@@ -181,13 +181,12 @@
             controls.maxPolarAngle = Math.PI / 2.1; // Não permite passar por baixo da maquete
             controls.minDistance = 0.2;
             controls.maxDistance = 10;
-            controls.rotateSpeed = -1.0; // Inverte o sentido do giro de tela a pedido do usuário
 
             // Configurar gestos para celular:
-            // 1 dedo: Pan (deslocar a câmera)
-            // 2 dedos: Zoom (Pinch) e Rotação (girar com dois dedos)
-            controls.touches.ONE = THREE.TOUCH.PAN;
-            controls.touches.TWO = THREE.TOUCH.DOLLY_ROTATE;
+            // 1 dedo: Rotação (girar a maquete)
+            // 2 dedos: Zoom (Pinch) e Pan (deslocar)
+            controls.touches.ONE = THREE.TOUCH.ROTATE;
+            controls.touches.TWO = THREE.TOUCH.DOLLY_PAN;
 
             // Iluminação
             const ambientLight = new THREE.AmbientLight(0xffffff, 0.85);
