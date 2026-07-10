@@ -234,28 +234,66 @@
                             const finalBox = new THREE.Box3().setFromObject(model);
                             const treeCount = trees.length;
                             
+                            // Geradores de Texturas Procedurais (Canvas) para manter performance e sem arquivos extras
+                            function createWoodTexture() {
+                                const canvas = document.createElement('canvas');
+                                canvas.width = 64; canvas.height = 64;
+                                const ctx = canvas.getContext('2d');
+                                ctx.fillStyle = '#ffffff';
+                                ctx.fillRect(0, 0, 64, 64);
+                                for(let i=0; i<40; i++) {
+                                    const v = Math.floor(100 + Math.random() * 100);
+                                    ctx.fillStyle = `rgb(${v},${v},${v})`;
+                                    ctx.fillRect(Math.random()*64, 0, Math.random()*3+1, 64);
+                                }
+                                const texture = new THREE.CanvasTexture(canvas);
+                                texture.wrapS = THREE.RepeatWrapping; texture.wrapT = THREE.RepeatWrapping;
+                                return texture;
+                            }
+                            
+                            function createLeafTexture() {
+                                const canvas = document.createElement('canvas');
+                                canvas.width = 128; canvas.height = 128;
+                                const ctx = canvas.getContext('2d');
+                                ctx.fillStyle = '#ffffff';
+                                ctx.fillRect(0, 0, 128, 128);
+                                for(let i=0; i<300; i++) {
+                                    const v = Math.floor(120 + Math.random() * 100);
+                                    ctx.fillStyle = `rgb(${v},${v},${v})`;
+                                    ctx.beginPath();
+                                    ctx.arc(Math.random()*128, Math.random()*128, Math.random()*5+1, 0, Math.PI*2);
+                                    ctx.fill();
+                                }
+                                const texture = new THREE.CanvasTexture(canvas);
+                                texture.wrapS = THREE.RepeatWrapping; texture.wrapT = THREE.RepeatWrapping;
+                                return texture;
+                            }
+                            
+                            const woodMap = createWoodTexture();
+                            const leafMap = createLeafTexture();
+                            
                             const trunkGeo = new THREE.CylinderGeometry(0.001, 0.0015, 0.01, 5);
-                            const trunkMat = new THREE.MeshLambertMaterial({ color: 0x6e4b30 });
+                            const trunkMat = new THREE.MeshLambertMaterial({ color: 0x6e4b30, map: woodMap });
                             const trunkMesh = new THREE.InstancedMesh(trunkGeo, trunkMat, treeCount);
                             
                             // Tipo 1: Árvore Redonda Clássica (Dodecaedro)
                             const type1Geo = new THREE.DodecahedronGeometry(0.005, 0);
-                            const type1Mat = new THREE.MeshLambertMaterial({ color: 0x4CAF50 });
+                            const type1Mat = new THREE.MeshLambertMaterial({ color: 0x4CAF50, map: leafMap });
                             const type1Mesh = new THREE.InstancedMesh(type1Geo, type1Mat, treeCount);
 
                             // Tipo 2: Árvore Cheia (Icosaedro)
                             const type2Geo = new THREE.IcosahedronGeometry(0.005, 1);
-                            const type2Mat = new THREE.MeshLambertMaterial({ color: 0x556B2F });
+                            const type2Mat = new THREE.MeshLambertMaterial({ color: 0x556B2F, map: leafMap });
                             const type2Mesh = new THREE.InstancedMesh(type2Geo, type2Mat, treeCount);
 
                             // Tipo 3: Árvore tipo guarda-chuva/savana (Esfera achatada)
                             const type3Geo = new THREE.SphereGeometry(0.006, 6, 6);
-                            const type3Mat = new THREE.MeshLambertMaterial({ color: 0x6B8E23 });
+                            const type3Mat = new THREE.MeshLambertMaterial({ color: 0x6B8E23, map: leafMap });
                             const type3Mesh = new THREE.InstancedMesh(type3Geo, type3Mat, treeCount);
 
                             // Tipo 4: Árvore irregular/arbusto (Octaedro)
                             const type4Geo = new THREE.OctahedronGeometry(0.005, 0);
-                            const type4Mat = new THREE.MeshLambertMaterial({ color: 0x8FBC8F });
+                            const type4Mat = new THREE.MeshLambertMaterial({ color: 0x8FBC8F, map: leafMap });
                             const type4Mesh = new THREE.InstancedMesh(type4Geo, type4Mat, treeCount);
                             
                             const dummy = new THREE.Object3D();
