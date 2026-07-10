@@ -8,6 +8,11 @@
     <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
   </head>
   <body style="margin: 0px; overflow: hidden;">
+    <!-- Botao de Navegacao para o Modo 3D de Tela -->
+    <a href="3d.html" style="position: absolute; top: 20px; right: 20px; z-index: 9999; background: rgba(30, 30, 30, 0.85); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); color: #00ff88; border: 1px solid rgba(255,255,255,0.15); border-radius: 20px; padding: 10px 18px; text-decoration: none; font-size: 13px; font-weight: bold; font-family: sans-serif; box-shadow: 0 8px 24px rgba(0,0,0,0.4); display: flex; align-items: center; gap: 6px;">
+      📱 Modo 3D de Tela (Sem Câmera)
+    </a>
+
     <a-scene embedded arjs="sourceType: webcam; debugUIEnabled: false; detectionMode: mono_and_matrix; matrixCodeType: 3x3;">
       <a-assets>
         <a-asset-item id="terrain-obj" src="terreno.obj"></a-asset-item>
