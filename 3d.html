@@ -118,8 +118,8 @@
     </div>
     
     <div class="instruction-badge">
-        <div class="instruction-item">👆 1 Dedo: Girar (Rotacionar)</div>
-        <div class="instruction-item">✌️ 2 Dedos: Zoom / Mover (Pan)</div>
+        <div class="instruction-item">👆 1 Dedo: Arrastar (Mover Mapa)</div>
+        <div class="instruction-item">✌️ 2 Dedos: Zoom (Pinça) e Girar</div>
     </div>
 
     <div class="ui-panel">
@@ -147,7 +147,7 @@
     </script>
     <script type="module">
         import * as THREE from 'three';
-        import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+        import { MapControls } from 'three/addons/controls/MapControls.js';
         import { OBJLoader } from 'three/addons/loaders/OBJLoader.js';
         import { MTLLoader } from 'three/addons/loaders/MTLLoader.js';
 
@@ -173,20 +173,14 @@
             renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
             container.appendChild(renderer.domElement);
 
-            // Controles de Órbita (Touch de Alta Performance)
-            controls = new OrbitControls(camera, renderer.domElement);
-            controls.enableDamping = true; // Inércia para giro suave
+            // Controles de Mapa (Navegação Estilo Google Earth)
+            controls = new MapControls(camera, renderer.domElement);
+            controls.enableDamping = true; // Inércia suave
             controls.dampingFactor = 0.05;
-            controls.screenSpacePanning = true;
+            controls.screenSpacePanning = false; // Mover sempre paralelo ao chão
             controls.maxPolarAngle = Math.PI / 2.1; // Não permite passar por baixo da maquete
             controls.minDistance = 0.2;
             controls.maxDistance = 10;
-
-            // Configurar gestos para celular:
-            // 1 dedo: Rotação (girar a maquete)
-            // 2 dedos: Zoom (Pinch) e Pan (deslocar)
-            controls.touches.ONE = THREE.TOUCH.ROTATE;
-            controls.touches.TWO = THREE.TOUCH.DOLLY_PAN;
 
             // Iluminação
             const ambientLight = new THREE.AmbientLight(0xffffff, 0.85);
