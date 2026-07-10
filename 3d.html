@@ -234,11 +234,11 @@
                             const finalBox = new THREE.Box3().setFromObject(model);
                             const treeCount = trees.length;
                             
-                            const trunkGeo = new THREE.CylinderGeometry(0.015, 0.02, 0.15, 5);
+                            const trunkGeo = new THREE.CylinderGeometry(0.005, 0.007, 0.05, 5);
                             const trunkMat = new THREE.MeshLambertMaterial({ color: 0x8B5A2B });
                             const trunkMesh = new THREE.InstancedMesh(trunkGeo, trunkMat, treeCount);
                             
-                            const leavesGeo = new THREE.ConeGeometry(0.08, 0.3, 5);
+                            const leavesGeo = new THREE.ConeGeometry(0.025, 0.1, 5);
                             const leavesMat = new THREE.MeshLambertMaterial({ color: 0x228B22 });
                             const leavesMesh = new THREE.InstancedMesh(leavesGeo, leavesMat, treeCount);
                             
@@ -261,16 +261,17 @@
                                 
                                 if(intersects.length > 0) {
                                     const ty = intersects[0].point.y;
-                                    const scale = 0.5 + Math.random() * 1.5; // Escala bem maior
+                                    const scale = 0.5 + Math.random() * 1.5; // Variação de tamanho
                                     const rotY = Math.random() * Math.PI * 2;
                                     
-                                    dummy.position.set(tx, ty + (0.075 * scale), tz); // metade da altura do tronco
+                                    // Posicionamento exato considerando as novas dimensões
+                                    dummy.position.set(tx, ty + (0.025 * scale), tz); // metade da altura do tronco
                                     dummy.rotation.set(0, rotY, 0);
                                     dummy.scale.set(scale, scale, scale);
                                     dummy.updateMatrix();
                                     trunkMesh.setMatrixAt(added, dummy.matrix);
                                     
-                                    dummy.position.set(tx, ty + (0.15 * scale) + (0.15 * scale), tz); // acima do tronco
+                                    dummy.position.set(tx, ty + (0.1 * scale), tz); // encosta exatamente no topo do tronco
                                     dummy.updateMatrix();
                                     leavesMesh.setMatrixAt(added, dummy.matrix);
                                     added++;
